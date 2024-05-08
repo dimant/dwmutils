@@ -123,24 +123,41 @@ void change_backlight(int d)
     write_int_to_file(BRIGHTNESS_FILE, next_backlight);
 }
 
-/// @brief changes the keyboard backlight value
-/// each call to this function will increase the keyboard backlight value by one
-/// if the maximum value is reached, the value will be set to the minimum
-void change_kbd_backlight()
+/// @brief the function changes an led light value
+/// each call will increase the light value by a step
+/// if the max value is reached, the brightness will be reset to zero
+/// @param max_brightness_file the file containing the maximum brightness value
+/// @param brightness_file the file containing the current brightness value
+void change_led_light(const char *max_brightness_file, const char *brightness_file)
 {
     int min = 0;
-    int max = read_int_from_file(KBD_MAX_BRIGHTNESS_FILE);
+    int max = read_int_from_file(max_brightness_file);
 
-    int current_backlight = read_int_from_file(KBD_BRIGHTNESS_FILE);
+    int current_backlight = read_int_from_file(brightness_file);
 
     if (current_backlight == max)
     {
-        write_int_to_file(KBD_BRIGHTNESS_FILE, min);
+        write_int_to_file(brightness_file, min);
     }
     else
     {
-        write_int_to_file(KBD_BRIGHTNESS_FILE, current_backlight + 1);
+        write_int_to_file(brightness_file, max);
     }
+}
+
+void change_kbd_backlight()
+{
+    change_led_light(KBD_MAX_BRIGHTNESS_FILE, KBD_BRIGHTNESS_FILE);
+}
+
+void change_mute_led()
+{
+    change_led_light(LED_MUTE_FILE, LED_MUTE_FILE);
+}
+
+void change_mic_mute_led()
+{
+    change_led_light(LED_MIC_MUTE_FILE, LED_MIC_MUTE_FILE);
 }
 
 int main(int argc, char **argv)
