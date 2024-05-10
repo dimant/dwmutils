@@ -195,7 +195,7 @@ void toggle_vol_mute()
     printf("%f\n", vol);
     if (vol < 0.001)
     {
-        write_float_to_cmd_arg(SET_VOL_CMD_FMT, 0.50);
+        write_float_to_cmd_arg(SET_VOL_CMD_FMT, previous_vol);
         write_int_to_file(LED_MUTE_FILE, 0);
     }
     else
@@ -228,9 +228,4 @@ void vol_down()
     }
 
     write_float_to_cmd_arg(SET_VOL_CMD_FMT, vol);
-}
-
-int main(int argc, char **argv)
-{
-    return 0;
 }
